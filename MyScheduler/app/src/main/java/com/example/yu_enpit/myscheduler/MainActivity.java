@@ -1,15 +1,23 @@
 package com.example.yu_enpit.myscheduler;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
+    private Realm mRealm;
+    private ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +27,13 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, ScheduleEditActivity.class));
+            }
+        });
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -26,6 +41,19 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        mRealm = Realm.getDefaultInstance();
+
+        mListView = (ListView) findViewById(R.id.listView);
+        RealmResults<Schedule> schedules
+                = mRealm.where(Schedule.class).findAll();
+        ScheduleAdapter adapter = new ScheduleAdapter(schedules);
+        mListView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mRealm.close();
     }
 
     @Override
@@ -46,7 +74,17 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
+        mListView.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Schedule schedule =
+                                (Schedule) parent.getItemAtPosition(position);
+                        startActivity(new Intent(MainActivity.this, ScheduleEditActivity.class)
+                                .putExtra("schedule_id", schedule.getId()));
+                    }
+                });
         return super.onOptionsItemSelected(item);
+
     }
 }
