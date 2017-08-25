@@ -6,7 +6,7 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
- * Created by enPIT-T6 on 2017/08/24.
+ * Created by v001ff on 2017/08/04.
  */
 
 public class Schedule extends RealmObject {
@@ -15,6 +15,14 @@ public class Schedule extends RealmObject {
     private Date date;
     private String title;
     private String detail;
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
 
     public long getId() {
         return id;
@@ -40,11 +48,5 @@ public class Schedule extends RealmObject {
         this.title = title;
     }
 
-    public String getDetail() {
-        return detail;
-    }
 
-    public void setDetail(String detail) {
-        this.detail = detail;
-    }
 }
