@@ -6,7 +6,7 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
 /**
- * Created by enPIT-T6 on 2017/08/24.
+ * Created by v001ff on 2017/08/04.
  */
 
 public class MySchedulerApplication extends Application {
